@@ -1,0 +1,16 @@
+{% extends "base" %}
+{% block content %}
+    <h1>Hi {{ name }}</h1>
+    <h3>Here are your items:</h3>
+    <ul>
+        {% for s in items %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/new" method="post">
+        <label for="name">Name:</label>
+        <input id="name" name="name" type="text"/><br/> <br/>
+        <label for="target">Target:</label>
+        <input id="target" name="target" type="text"/><br/> <br/> <input type="submit" value="Submit"/>
+    </form>
+{% endblock content %}

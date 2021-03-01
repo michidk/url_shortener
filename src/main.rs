@@ -1,95 +1,48 @@
 #![feature(proc_macro_hygiene, decl_macro, try_trait)]
 
-#[macro_use]
-extern crate rocket;
-
-use rocket::response::Redirect;
-use rocket::State;
-use rocket::{request::Form, response::Flash};
-
-use rocket_contrib::templates::Template;
-use serde::{Deserialize, Serialize};
-use sled::IVec;
-use sled_extensions::bincode::Tree;
+mod database;
+mod routes;
+mod template;
+mod utils;
+use crate::database::Database;
+use rocket::routes;
+use rocket_contrib::{serve::StaticFiles, templates::Template};
 use sled_extensions::DbExt;
 use std::option::NoneError;
 
 #[derive(thiserror::Error, Debug)]
-pub enum ServerError {
-    #[error("sled db error")]
+pub(crate) enum AppError {
+    #[error("Sled Error: {0}")]
     SledError(#[from] sled_extensions::Error),
-    #[error("resource not found")]
+    #[error("Resource not found")]
     NotFound,
 }
 
-impl From<NoneError> for ServerError {
+impl From<NoneError> for AppError {
     fn from(_: NoneError) -> Self {
-        ServerError::NotFound
+        AppError::NotFound
     }
 }
 
-type EndpointResult<T> = Result<T, ServerError>;
-
-struct Database {
-    urls: Tree<Url>,
-}
-
-#[derive(Deserialize, Serialize, Clone, FromForm)]
-struct Url {
-    name: String,
-    target: String,
-}
-
-#[derive(serde::Serialize)]
-struct TemplateContext {
-    title: &'static str,
-    name: Option<String>,
-    items: Vec<&'static str>,
-}
-
-#[get("/")]
-fn index() -> Template {
-    Template::render(
-        "index",
-        &TemplateContext {
-            title: "Hello",
-            name: Some("test".into()),
-            items: vec!["One", "Two", "Three"],
-        },
-    )
-}
-
-//https://github.com/marcusbuffett/rocket_sled_tutorial/blob/tutorial/src/main.rs
-#[post("/new", data = "<task>")]
-fn new(db: State<Database>, task: Form<Url>) -> Flash<Redirect> {
-    if task.name.is_empty() || task.target.is_empty() {
-        Flash::error(Redirect::to("/"), "Cannot be empty.")
-    } else {
-        let key = task.name.as_bytes();
-        db.urls.insert(key, task.clone());
-        Flash::success(Redirect::to("/"), "Task added.")
-    }
-}
-
-#[get("/s/<url>")]
-fn redirect(db: State<Database>, url: String) -> EndpointResult<Redirect> {
-    let url = db.urls.get(url)??;
-    // look up uri to uuid
-    Ok(Redirect::to(url.target))
-}
+pub(crate) type EndpointResult<T> = Result<T, AppError>;
 
 fn main() {
-    let db = sled_extensions::Config::default()
-        .path("./db")
-        .open()
-        .expect("Failed to open sled db");
+    let db = database::setup();
     rocket::ignite()
         .manage(Database {
             urls: db
                 .open_bincode_tree("urls")
                 .expect("failed to open user tree"),
         })
-        .mount("/", routes![index, new, redirect])
+        .mount(
+            "/",
+            routes![
+                crate::routes::index,
+                crate::routes::new,
+                crate::routes::redirect
+            ],
+        )
+        .mount("/", StaticFiles::from("./static"))
         .attach(Template::fairing())
         .launch();
 }

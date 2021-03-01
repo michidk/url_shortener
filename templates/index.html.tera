@@ -1,16 +1,29 @@
 {% extends "base" %}
 {% block content %}
-    <h1>Hi {{ name }}</h1>
-    <h3>Here are your items:</h3>
-    <ul>
-        {% for s in items %}
-            <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
-    <form action="/new" method="post">
-        <label for="name">Name:</label>
-        <input id="name" name="name" type="text"/><br/> <br/>
-        <label for="target">Target:</label>
-        <input id="target" name="target" type="text"/><br/> <br/> <input type="submit" value="Submit"/>
-    </form>
+    <section class="mt-5 is-size-1">
+        <form action="/new" method="post">
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+                <p>I want to forward
+                </p>
+                <div class="field has-addons ml-3">
+                    <div class="control">
+                        <div class="button is-static is-large is-rounded" style="top: 5px;">
+                            https://myurl.com/s/
+                        </div>
+                    </div>
+                    <div class="control">
+                        <input class="input is-large is-rounded" placeholder="URL" style="width: 60%; top: 5px;" type="text" name="slug" value="{{ view.slug_suggestion }}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+                <p>to
+                </p>
+                <input class="input is-large is-rounded ml-3" placeholder="https://www.google.de" style="width: 63%; top: 5px;" type="text" name="target"/> .
+            </div>
+            <div class="has-text-centered mt-6">
+                <button class="button is-primary is-large">Submit</button>
+            </div>
+        </form>
+    </section>
 {% endblock content %}

@@ -10,8 +10,9 @@ serde = { version = "1.0.123", features = ["derive"] }
 sled = "0.34.6"
 sled-extensions = { version = "0.2.0", features = ["bincode"]}
 thiserror = "1.0.24"
+rand = "0.8.3"
 
 [dependencies.rocket_contrib]
 version = "0.4.7"
 default-features = false
-features = ["tera_templates"]
+features = ["tera_templates", "serve"]

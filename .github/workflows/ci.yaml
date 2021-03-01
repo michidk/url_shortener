@@ -72,13 +72,11 @@ jobs:
           override: true
       - name: Build
         run: make build-release
-      - name: Copy application files
-        run: cp ./target/x86_64-unknown-linux-gnu/release/url_shortener ./out/
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: Linux Build (x86_64)
-          path: ./out
+          path: ./target/x86_64-unknown-linux-gnu/release/url_shortener
 
   build-windows:
     name: Windows Build
@@ -94,10 +92,8 @@ jobs:
           override: true
       - name: Build
         run: make build-release
-      - name: Copy application files
-        run: cp ./target/release/url_shortener.exe ./out/
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: Windows Build (x86_64)
-          path: ./out
+          path: ./target/release/url_shortener.exe

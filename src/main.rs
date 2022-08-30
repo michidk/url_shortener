@@ -1,24 +1,30 @@
 #[macro_use]
 extern crate rocket;
 
-mod database;
 mod routes;
 mod template;
 mod utils;
-use crate::database::Database;
+use rocket::fairing::AdHoc;
+use rocket::{fairing, Build, Rocket};
 use rocket::{http::Status, response, routes, Request};
-use sled_extensions::DbExt;
 
 use rocket::fs::{relative, FileServer};
 use rocket::response::Responder;
 use rocket_dyn_templates::Template;
 
+use migration::{DbErr, MigratorTrait};
+use sea_orm_rocket::Database;
+
+mod pool;
+use pool::Db;
+use serde_json::json;
+
 #[derive(thiserror::Error, Debug)]
-pub(crate) enum AppError {
-    #[error("Sled Error: {0}")]
-    SledError(#[from] sled_extensions::Error),
+pub enum AppError {
     #[error("Resource not found")]
     NotFound,
+    #[error("DbError: {0}")]
+    DbErr(#[from] DbErr),
 }
 
 impl<'r, 'o: 'r> Responder<'r, 'o> for AppError {
@@ -27,25 +33,55 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for AppError {
     }
 }
 
-pub(crate) type EndpointResult<T> = Result<T, AppError>;
+pub type EndpointResult<T> = Result<T, AppError>;
+
+#[catch(404)]
+pub fn not_found(req: &Request<'_>) -> Template {
+    Template::render(
+        "error/404",
+        json! ({
+            "uri": req.uri()
+        }),
+    )
+}
+
+async fn custom_bootstrap(rocket: Rocket<Build>) -> Rocket<Build> {
+    // initializes the sqlite database, if it does not exist
+    let url: Result<String, rocket::figment::Error> =
+        rocket.figment().extract_inner("databases.sea_orm.url");
+    if let Ok(path) = url {
+        if let Some(path) = path.strip_prefix("sqlite://") {
+            let path = std::path::Path::new(&path);
+            if !path.exists() {
+                std::fs::File::create(path).expect("Could not bootstrap sqlite database");
+            }
+        }
+    }
+
+    rocket
+}
+
+async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
+    let conn = &Db::fetch(&rocket).unwrap().conn;
+    let _ = migration::Migrator::up(conn, None).await;
+    Ok(rocket)
+}
 
 #[launch]
 fn rocket() -> _ {
-    let db = database::setup();
     rocket::build()
-        .manage(Database {
-            urls: db
-                .open_bincode_tree("urls")
-                .expect("failed to open user tree"),
-        })
+        .attach(AdHoc::on_ignite("Bootstrapping", custom_bootstrap))
+        .attach(Db::init())
+        .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
+        .mount("/", FileServer::from(relative!("static")))
         .mount(
             "/",
             routes![
                 crate::routes::index,
                 crate::routes::new,
-                crate::routes::redirect
+                crate::routes::perform_redirect
             ],
         )
-        .mount("/", FileServer::from(relative!("static")))
+        .register("/", catchers![not_found])
         .attach(Template::fairing())
 }

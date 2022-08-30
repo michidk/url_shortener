@@ -2,6 +2,7 @@
 {% block content %}
     <section class="mt-5 is-size-1">
         <form action="/new" method="post">
+            <input type="hidden" name="id" id="id" value="0" />
             <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
                 <p>I want to forward
                 </p>
@@ -12,7 +13,7 @@
                         </div>
                     </div>
                     <div class="control">
-                        <input class="input is-large is-rounded" placeholder="URL" style="width: 60%; top: 5px;" type="text" name="slug" value="{{ view.slug_suggestion }}"/>
+                        <input class="input is-large is-rounded" placeholder="URL" style="width: 60%; top: 5px;" type="text" name="slug" value="780234"/>
                     </div>
                 </div>
             </div>

@@ -10,7 +10,7 @@ pub(crate) fn random_string(n: usize) -> String {
         .collect()
 }
 
-pub(crate) fn gen_rnd_id(db: State<Database>) -> Result<String, AppError> {
+pub(crate) fn gen_rnd_id(db: &State<Database>) -> Result<String, AppError> {
     // TODO: add max retries
     loop {
         let s = random_string(6);

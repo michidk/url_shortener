@@ -1,14 +1,17 @@
-#![feature(proc_macro_hygiene, decl_macro, try_trait)]
+#[macro_use]
+extern crate rocket;
 
 mod database;
 mod routes;
 mod template;
 mod utils;
 use crate::database::Database;
-use rocket::routes;
-use rocket_contrib::{serve::StaticFiles, templates::Template};
+use rocket::{http::Status, response, routes, Request};
 use sled_extensions::DbExt;
-use std::option::NoneError;
+
+use rocket::fs::{relative, FileServer};
+use rocket::response::Responder;
+use rocket_dyn_templates::Template;
 
 #[derive(thiserror::Error, Debug)]
 pub(crate) enum AppError {
@@ -18,17 +21,18 @@ pub(crate) enum AppError {
     NotFound,
 }
 
-impl From<NoneError> for AppError {
-    fn from(_: NoneError) -> Self {
-        AppError::NotFound
+impl<'r, 'o: 'r> Responder<'r, 'o> for AppError {
+    fn respond_to(self, req: &'r Request<'_>) -> response::Result<'o> {
+        Status::InternalServerError.respond_to(req)
     }
 }
 
 pub(crate) type EndpointResult<T> = Result<T, AppError>;
 
-fn main() {
+#[launch]
+fn rocket() -> _ {
     let db = database::setup();
-    rocket::ignite()
+    rocket::build()
         .manage(Database {
             urls: db
                 .open_bincode_tree("urls")
@@ -42,7 +46,6 @@ fn main() {
                 crate::routes::redirect
             ],
         )
-        .mount("/", StaticFiles::from("./static"))
+        .mount("/", FileServer::from(relative!("static")))
         .attach(Template::fairing())
-        .launch();
 }

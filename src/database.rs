@@ -1,4 +1,3 @@
-use rocket::request::FromForm;
 use serde::{Deserialize, Serialize};
 use sled_extensions::{bincode::Tree, Db};
 

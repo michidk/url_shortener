@@ -1,5 +1,5 @@
 use crate::utils;
-use rocket_contrib::templates::Template;
+use rocket_dyn_templates::Template;
 use utils::get_rnd_spell;
 
 #[derive(serde::Serialize)]

@@ -2,26 +2,26 @@
 
 # run and compile
 run:
-	cargo +nightly run
+	cargo run
 
 build:
-	cargo +nightly build
+	cargo build
 
 build-release:
-	cargo +nightly build --release
+	cargo build --release
 
 # test and lint
 check:
-	cargo +nightly check --all
+	cargo check --all
 
 test:
-	cargo +nightly test --all
+	cargo test --all
 
 clippy:
-	cargo +nightly clippy -- -D warnings
+	cargo clippy -- -D warnings
 
 fmt:
-	cargo +nightly fmt --all -- --check
+	cargo fmt --all -- --check
 
 # utility
 lint: fmt clippy

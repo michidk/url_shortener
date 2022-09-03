@@ -1,12 +1,12 @@
 use crate::pool::Db;
-use crate::{context, template::render, AppError, EndpointResult};
+use crate::{context, template::render, EndpointResult};
 use rocket::form::Form;
 use rocket::{
     get, post,
     response::{Flash, Redirect},
 };
 use rocket_dyn_templates::Template;
-use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set};
+use sea_orm::{ActiveModelTrait, Set};
 use sea_orm_rocket::Connection;
 
 use entity::redirect;
@@ -33,22 +33,6 @@ pub async fn new(
         .expect("could not insert redirect");
 
         Ok(Flash::success(Redirect::to("/"), "Task added."))
-    }
-}
-
-#[get("/s/<slug>")]
-pub async fn perform_redirect(conn: Connection<'_, Db>, slug: String) -> EndpointResult<Redirect> {
-    let db = conn.into_inner();
-
-    // look up uri to uuid
-    let res = entity::redirect::Entity::find()
-        .filter(entity::redirect::Column::Slug.eq(slug))
-        .one(db)
-        .await?;
-    if let Some(model) = res {
-        Ok(Redirect::to(model.target))
-    } else {
-        Err(AppError::NotFound)
     }
 }
 

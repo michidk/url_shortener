@@ -1,10 +1,12 @@
 use crate::utils;
 use rocket_dyn_templates::Template;
-use utils::get_rnd_spell;
+use serde_json::{value::Value, Map};
+use utils::{get_rnd_spell, get_app_info};
 
 #[derive(serde::Serialize)]
 struct Context<T> {
     spell: String,
+    app_info: Map<String, Value>,
     view: T,
 }
 
@@ -30,6 +32,7 @@ pub(crate) fn render<T: serde::Serialize>(name: &'static str, context: T) -> Tem
         name,
         &Context {
             spell: get_rnd_spell(),
+            app_info: get_app_info(),
             view: context,
         },
     )

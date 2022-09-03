@@ -3,6 +3,7 @@ name = "url_shortener"
 version = "0.1.1"
 authors = ["Michael Lohr <michael@lohr.dev>"]
 edition = "2021"
+build = "build.rs"
 
 [workspace]
 members = [".", "entity", "migration"]
@@ -14,11 +15,12 @@ futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
 rocket = "0.5.0-rc.2"
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0.85"
+serde_json = { version = "1.0.85", features = ["preserve_order"] }
 thiserror = "1.0.32"
 rand = "0.8.5"
 entity = { path = "entity" }
 migration = { path = "migration" }
+built = { version = "0.5.1" }
 
 [dependencies.rocket_dyn_templates]
 version = "0.1.0-rc.2"
@@ -35,3 +37,6 @@ features = [
   "sqlx-mysql",
   "sqlx-sqlite",
 ]
+
+[build-dependencies]
+built = { version = "0.5.1", features = ["git2"] }

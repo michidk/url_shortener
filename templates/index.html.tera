@@ -1,10 +1,20 @@
 {% extends "base" %}
 {% block content %}
-    <section class="mt-5 is-size-1">
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <p class="title">
+                {{ app_info.name }}
+            </p>
+            <p class="subtitle">
+                {{ spell }}
+            </p>
+        </div>
+    </section>
+    <section class="mt-5 is-size-3">
         <form action="/new" method="post">
             <input type="hidden" name="id" id="id" value="0" />
             <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
-                <p>I want to forward
+                <p>Let's forward
                 </p>
                 <div class="field has-addons ml-3">
                     <div class="control">

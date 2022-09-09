@@ -24,16 +24,49 @@
     </style>
   </head>
   <body>
+    {# Navbar #}
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+          {{ app_info.name }}
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+
+        <div class="navbar-end">
+          <div class="navbar-start">
+            <a class="navbar-item">
+              Home
+            </a>
+
+            <a class="navbar-item">
+              List
+            </a>
+          </div>
+
+          <div class="navbar-item">
+            <div class="buttons">
+              {# <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a> #}
+              <a class="button is-light">
+                Log out
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
     {# Content #}
     <div
-      class="container is-fluid" style="flex: 1;">
-      {# Header #}
-      <section class="section has-background-primary mt-5">
-        <div class="container">
-          <h1 class="title has-text-centered has-text-white">{{ app_info.name }}</h1>
-          <p class="has-text-centered subtitle has-text-white">{{ spell }}</p>
-        </div>
-      </section>
+      class="container is-fullhd" style="flex: 1; width: 100%">
       {# Page #}
       {% block content %}{% endblock content %}
     </div>

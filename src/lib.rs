@@ -82,6 +82,7 @@ pub fn rocket() -> _ {
                 crate::routes::index::index,
                 crate::routes::index::new,
                 crate::routes::redirect::redirect,
+                crate::routes::list::list
             ],
         )
         .register("/", catchers![not_found])

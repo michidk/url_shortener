@@ -1,0 +1,14 @@
+{% extends "base" %}
+{% block content %}
+<section class="mt-5 is-size-1">
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>this</td>
+                <td>hnt</td>
+
+            </tr>
+        </tbody>
+    </table>
+</section>
+{% endblock content %}

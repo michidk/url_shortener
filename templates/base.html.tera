@@ -1,88 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>
-      {{ app_info.name }}
-    </title>
-    <meta charset="utf-8"/>
-    <meta content="Sample page styled with Bulma CSS using Bulma LIVE editor." name="description"/>
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-    <meta content="Michael Lohr" name="author"/>
-    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="/css/bulma.min.css">
-    <link rel="stylesheet" href="/css/font-awesome-all.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet"/>
-    <style>
-      body {
-        font-family: "Noto Sans JP", sans-serif;
-        display: flex;
-        min-height: 100vh;
-        flex-direction: column;
-      }
-    </style>
-  </head>
-  <body>
-    {# Navbar #}
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="#">
-          {{ app_info.name }}
-        </a>
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
+<head>
+  <title>
+    {{ app_info.name }}
+  </title>
+  <meta charset="utf-8" />
+  <meta content="Sample page styled with Bulma CSS using Bulma LIVE editor." name="description" />
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+  <meta content="Michael Lohr" name="author" />
+  <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <link rel="stylesheet" href="/css/bulma.min.css">
+  <link rel="stylesheet" href="/css/font-awesome-all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+  </style>
+</head>
+
+<body>
+  {# Navbar #}
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">
+        {{ app_info.name }}
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <a class="button {% if name != "index" %}is-primary{% endif %}" href="/">
+            <strong>New redirect</strong>
+          </a>
+        </div>
+        <a class="navbar-item" href="/list">
+          List Redirects
         </a>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
-
-        <div class="navbar-end">
-          <div class="navbar-start">
-            <a class="navbar-item">
-              Home
-            </a>
-
-            <a class="navbar-item">
-              List
-            </a>
-          </div>
-
-          <div class="navbar-item">
-            <div class="buttons">
-              {# <a class="button is-primary">
-                <strong>Sign up</strong>
-              </a> #}
-              <a class="button is-light">
-                Log out
-              </a>
-            </div>
-          </div>
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-light" href="/logout">
+            Log out
+          </a>
         </div>
       </div>
-    </nav>
-    {# Content #}
-    <div
-      class="container is-fullhd" style="flex: 1; width: 100%">
-      {# Page #}
-      {% block content %}{% endblock content %}
     </div>
-    {# Footer #}
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          <a href="{{ app_info.github_url }}">
-            <strong>{{ app_info.name }}</strong>
-          </a>
-          v{{app_info.version}}
-          {% if app_info.git_hash %}
-          (<a href="{{ app_info.github_url }}/commit/{{ app_info.git_hash }}">{{ app_info.git_hash }}</a>)
-          {% endif %}
-        </p>
-      </div>
-    </footer>
-  </body>
+    </div>
+  </nav>
+  {# Content #}
+  <div class="container is-fullhd" style="flex: 1; width: 100%">
+    {# Page #}
+    {% block content %}{% endblock content %}
+  </div>
+  {# Footer #}
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <a href="{{ app_info.github_url }}">
+          <strong>{{ app_info.name }}</strong>
+        </a>
+        v{{app_info.version}}
+        {% if app_info.git_hash %}
+        (<a href="{{ app_info.github_url }}/commit/{{ app_info.git_hash }}">{{ app_info.git_hash }}</a>)
+        {% endif %}
+      </p>
+    </div>
+  </footer>
+</body>
+
 </html>

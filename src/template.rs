@@ -5,6 +5,7 @@ use utils::{get_rnd_spell, get_app_info};
 
 #[derive(serde::Serialize)]
 struct Context<T> {
+    name: String,
     spell: String,
     app_info: Map<String, Value>,
     view: T,
@@ -31,6 +32,7 @@ pub(crate) fn render<T: serde::Serialize>(name: &'static str, context: T) -> Tem
     Template::render(
         name,
         &Context {
+            name: name.to_owned(),
             spell: get_rnd_spell(),
             app_info: get_app_info(),
             view: context,

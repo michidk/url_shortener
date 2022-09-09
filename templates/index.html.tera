@@ -30,7 +30,7 @@
             <div class="mt-2" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
                 <p>to
                 </p>
-                <input class="input is-large is-rounded ml-3" placeholder="https://www.google.de" style="width: 63%; top: 5px;" type="text" name="target"/> .
+                <input class="input is-large is-rounded ml-3" placeholder="https://www.google.de" style="width: 63%; top: 5px;" type="text" name="target"/>
             </div>
             <div class="has-text-centered mt-6">
                 <button class="button is-primary is-large">Submit</button>
